@@ -1,0 +1,13 @@
+Pathfinding/AStar.cpp
+Pathfinding/AStar.h
+Pathfinding/Node.cpp
+Pathfinding/Node.h
+Pathfinding/Pathfinding.pro
+Pathfinding/Space3d.cpp
+Pathfinding/Space3d.h
+Pathfinding/main.cpp
+Pathfinding/Pathfinding.pro.user
+build-Pathfinding-Clang-Debug/
+build-Pathfinding-Clang-Release/
+build-Pathfinding-GCC-Debug/
+build-Pathfinding-GCC-Release/
