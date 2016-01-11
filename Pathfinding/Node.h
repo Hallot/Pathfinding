@@ -8,7 +8,8 @@ public:
 	Node(Node* Parent, unsigned int x, unsigned int y, unsigned int z);
 
 	//! Two nodes are equals if the have the same position
-	bool operator==(Node* rightHandSide);
+	bool operator==(const Node* rightHandSide) const;
+	bool operator!=(const Node* rightHandSide) const;
 
 	//! Square of the euclidian distance between two nodes
 	static double squaredEuclidianDistance(Node* node1, Node* node2);

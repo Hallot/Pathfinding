@@ -1,7 +1,8 @@
 #include "Space3d.h"
 #include "AStar.h"
 #include "Node.h"
-#include <stdio.h>
+#include "Path.h"
+#include <iostream>
 
 int main()
 {
@@ -23,11 +24,22 @@ int main()
 		}
 	}
 
-	Node* start = new Node(nullptr, 30, 30, 30);
-	Node* goal = new Node(nullptr, 30, 50, 30);
+	space->operator ()(0, 2, 0) = false;
 
-	Node* result = AStar::findPath(start, goal, space);
-	//printf("%du, %du, %du\n", result->x(), result->y(), result->z());
+	Node* start = new Node(nullptr, 30, 30, 30);
+	Node* goal = new Node(nullptr, 35, 49, 31);
+
+	Path* result = AStar::findPath(start, goal, space);
+	if (result != nullptr)
+	{
+		std::cout << result->toString();
+	}
+	else
+	{
+		std::cout << "Invalid path.\n";
+	}
+
+	delete space;
 
 	return 0;
 }

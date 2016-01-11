@@ -3,7 +3,6 @@
 #include "Space3d.h"
 #include <qmap.h>
 #include <qhash.h>
-#include <stdio.h>
 
 /*!
  * \brief AStar::findPath Return the path from start to goal using the a* algorithm.
@@ -12,8 +11,15 @@
  * \param space The space for the search.
  * \return The last node that contains the result's path.
  */
-Node* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
+Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 {
+	// check that the start and goal are valid
+	if (!space->operator ()(startPosition->x(), startPosition->y(), startPosition->z() ||
+		!space->operator ()(goalPosition->x(), goalPosition->y(), goalPosition->z())))
+	{
+		return nullptr;
+	}
+
 	// the open set where the nodes to be explored are stored
 	// a min heap where the node with the lowest cost is stored first
 	QMap<double, Node*> openSet;
@@ -34,68 +40,79 @@ Node* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 			{
 				for (int k = -1; k <= 1; k++)
 				{
-					// center is the current one
-					if (i != 0 && j != 0 && k != 0)
+					// if outside the space
+					if ((int)current->x() + i < 0 || current->x() + i > space->sizeX() ||
+							(int)current->y() + j < 0 || current->y() + j > space->sizeY() ||
+							(int)current->z() + k < 0 || current->z() + k > space->sizeZ())
 					{
-						// if outside the space
-						if ((int)current->x() + i < 0 || current->x() + i > space->sizeX() ||
-								(int)current->y() + j < 0 || current->y() + j > space->sizeY() ||
-								(int)current->z() + k < 0 || current->z() + k > space->sizeZ())
+						continue;
+					}
+
+					// if unvalid node
+					if (!space->operator ()(current->x() + i, current->y() + j, current->z() + k))
+					{
+						continue;
+					}
+
+					// set the parent node to current for the new nodes
+					Node* newNode = new Node(current, current->x() + i, current->y() + j, current->z() + k);
+
+					// if we have found the goal, we are done
+					if (newNode->operator ==(goalPosition))
+					{
+						// recreate the path from the final node
+						Path* path = nodeFromPath(newNode);
+
+						// delete all the nodes
+						qDeleteAll(openSet);
+						openSet.clear();
+						qDeleteAll(closedSet);
+						closedSet.clear();
+
+						return path;
+					}
+
+					// update the costs
+					newNode->setPreviousCost(current->previousCost() + Node::squaredEuclidianDistance(current, newNode));
+					newNode->setHeuristic(Node::squaredEuclidianDistance(newNode, goalPosition));
+					newNode->setCost(newNode->previousCost() + newNode->heuristic());
+
+					// if node with same coordinates in openSet but lower cost, skip
+					for (auto it = openSet.begin(); it != openSet.end(); it++)
+					{
+						// only need to search over those with a lower cost
+						if (it.key() > newNode->cost())
 						{
+							break;
+						}
+						// if same coordinates
+						else if (it.value() == newNode)
+						{
+							// remove the node
+							openSet.erase(it);
+							// add the new node instead
+							openSet.insert(newNode->cost(), newNode);
+							// break out of the search loop
+							break;
+							// continue to the next value of the neighbours' loop
 							continue;
 						}
-
-						// set the parent node to current for the new nodes
-						Node* newNode = new Node(current, current->x() + i, current->y() + j, current->z() + k);
-
-						// if we have found the goal, we are done
-						if (newNode == goalPosition)
-						{
-							return newNode;
-						}
-
-						// update the costs
-						newNode->setPreviousCost(current->previousCost() + Node::squaredEuclidianDistance(current, newNode));
-						newNode->setHeuristic(Node::squaredEuclidianDistance(newNode, goalPosition));
-						newNode->setCost(newNode->previousCost() + newNode->heuristic());
-
-						// if node with same coordinates in openSet but lower cost, skip
-						for (auto it = openSet.begin(); it != openSet.end(); it++)
-						{
-							// only need to search over those with a lower cost
-							if (it.key() > newNode->cost())
-							{
-								break;
-							}
-							// if same coordinates
-							else if (it.value() == newNode)
-							{
-								// remove the node
-								openSet.erase(it);
-								// add the new node instead
-								openSet.insert(newNode->cost(), newNode);
-								// break out of the search loop
-								break;
-								// continue to the next value of the neighbours' loop
-								continue;
-							}
-						}
-
-						// if node with same coordinates in closedSet but lower cost, skip
-						auto it = closedSet.find(cantorTuple(newNode->x(), newNode->y(), newNode->z()));
-						if (it != closedSet.end() && it.value() == newNode)
-						{
-							// if the cost is lower for the existing node
-							if (it.value()->cost() < newNode->cost())
-							{
-								// continue to the next value of the neighbours' loop
-								continue;
-							}
-						}
-
-						// add the node to the open list
-						openSet.insertMulti(newNode->cost(), newNode);
 					}
+
+					// if node with same coordinates in closedSet but lower cost, skip
+					auto it = closedSet.find(cantorTuple(newNode->x(), newNode->y(), newNode->z()));
+					if (it != closedSet.end() && it.value() == newNode)
+					{
+						// if the cost is lower for the existing node
+						if (it.value()->cost() < newNode->cost())
+						{
+							// continue to the next value of the neighbours' loop
+							continue;
+						}
+					}
+
+					// add the node to the open list
+					openSet.insertMulti(newNode->cost(), newNode);
 				}
 			}
 		}
@@ -104,6 +121,12 @@ Node* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 	}
 
 	// no solution found
+	// delete all the nodes
+	qDeleteAll(openSet);
+	openSet.clear();
+	qDeleteAll(closedSet);
+	closedSet.clear();
+
 	return nullptr;
 }
 
@@ -117,7 +140,25 @@ Node* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
  */
 unsigned long AStar::cantorTuple(const unsigned int a, const unsigned int b, const unsigned int c)
 {
-	unsigned long cantor = (unsigned long)(1/2 * (1/2 * (a + b) * (a + b + 1) + b + c) * (1/2 * (a + b) * (a + b + 1) + b + c + 1) + c);
-	//printf("%lu\n", cantor);
-	return cantor;
+	return (unsigned long)(1/2 * (1/2 * (a + b) * (a + b + 1) + b + c) * (1/2 * (a + b) * (a + b + 1) + b + c + 1) + c);
+}
+
+/*!
+ * \brief AStar::nodeFromPath Return the path from the final node.
+ * \param node The end node of the path.
+ * \return
+ */
+Path* AStar::nodeFromPath(Node* node)
+{
+	Path* path = new Path();
+	while (node != nullptr)
+	{
+		Path::Point point;
+		point.x = node->x();
+		point.y = node->y();
+		point.z = node->z();
+		path->prepend(point);
+		node = node->parent();
+	}
+	return path;
 }
