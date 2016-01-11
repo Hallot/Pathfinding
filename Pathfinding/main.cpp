@@ -16,16 +16,23 @@ int main()
 		{
 			for (unsigned int k = 0; k < 50; k++)
 			{
-				if ((i > 9 && i < 12) && (j > 9 && j < 12) && (k > 9 && k < 12))
+				if ((i > 0 && i < 50) && (j > 0 && j < 50) && (k > 0 && k < 15))
 				{
 					space->operator ()(i, j, k) = true;
 				}
-				if ((i > 30 && i < 50) && (j > 30 && j < 50) && (k > 30 && k < 50))
+				if ((i > 0 && i < 50) && (j > 0 && j < 50) && (k > 35 && k < 50))
 				{
 					space->operator ()(i, j, k) = true;
 				}
 			}
 		}
+	}
+
+	for (unsigned int k = 0; k < 50; k++)
+	{
+		space->operator ()(29, 29, k) = true;
+		space->operator ()(30, 30, k) = true;
+		space->operator ()(31, 31, k) = true;
 	}
 
 	Node* start = new Node(nullptr, 10, 10, 10);

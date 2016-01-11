@@ -46,7 +46,22 @@ double Node::squaredEuclidianDistance(Node* node1, Node* node2)
 {
 	return (node1->x() - node2->x()) * (node1->x() - node2->x()) +
 				  (node1->y() - node2->y()) * (node1->y() - node2->y()) +
-				  (node1->z() - node2->z()) * (node1->z() - node2->z());
+			(node1->z() - node2->z()) * (node1->z() - node2->z());
+}
+
+/*!
+ * \brief Node::setValue Set the value of a node to this node.
+ * \param node The node from which to set the values.
+ */
+void Node::setValue(Node* node)
+{
+	this->setX(node->x());
+	this->setY(node->y());
+	this->setZ(node->z());
+	this->setCost(node->cost());
+	this->setHeuristic(node->heuristic());
+	this->setParent(node->parent());
+	this->setPreviousCost(node->previousCost());
 }
 
 

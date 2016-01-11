@@ -14,6 +14,9 @@ public:
 	//! Square of the euclidian distance between two nodes
 	static double squaredEuclidianDistance(Node* node1, Node* node2);
 
+	//! Set the value of a node to this node.
+	void setValue(Node* node);
+
 	//! Getters and setters
 	Node* parent() const;
 	void setParent(Node* parent);

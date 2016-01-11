@@ -18,7 +18,7 @@ protected:
 	static unsigned long cantorTuple(const unsigned int a, const unsigned int b, const unsigned int c);
 
 	//! Return the path from the final node.
-	static Path* nodeFromPath(Node* node);
+	static Path* pathFromNode(Node* node);
 
 	//! Return if a node is valid or not.
 	static bool isValid(Space3d* space, const unsigned int i, const unsigned int j, const unsigned int k);
