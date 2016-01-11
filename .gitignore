@@ -11,3 +11,5 @@ build-Pathfinding-Clang-Debug/
 build-Pathfinding-Clang-Release/
 build-Pathfinding-GCC-Debug/
 build-Pathfinding-GCC-Release/
+Clang/
+GCC/

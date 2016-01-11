@@ -72,6 +72,7 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 						Path* path = pathFromNode(newNode);
 
 						// delete all the nodes
+						delete newNode;
 						qDeleteAll(openSet);
 						openSet.clear();
 						qDeleteAll(closedSet);
