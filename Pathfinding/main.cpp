@@ -3,6 +3,7 @@
 #include "Node.h"
 #include "Path.h"
 #include <iostream>
+#include <ctime>
 
 int main()
 {
@@ -38,10 +39,16 @@ int main()
 	Node* start = new Node(nullptr, 10, 10, 10);
 	Node* goal = new Node(start, 400, 400, 400);
 
+
+	std::clock_t begin;
+	begin = std::clock();
 	Path* result = AStar::findPath(start, goal, space);
+	std::cout << "Time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
+
+	// print result
 	if (result != nullptr)
 	{
-		std::cout << result->toString();
+		//std::cout << result->toString();
 	}
 	else
 	{
