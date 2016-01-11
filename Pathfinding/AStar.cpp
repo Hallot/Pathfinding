@@ -14,8 +14,8 @@
 Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 {
 	// check that the start and goal are valid
-	if (!space->operator ()(startPosition->x(), startPosition->y(), startPosition->z() ||
-		!space->operator ()(goalPosition->x(), goalPosition->y(), goalPosition->z())))
+	if (!isValid(space, startPosition->x(), startPosition->y(), startPosition->z()) ||
+		!isValid(space, goalPosition->x(), goalPosition->y(), goalPosition->z()))
 	{
 		return nullptr;
 	}
@@ -40,16 +40,8 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 			{
 				for (int k = -1; k <= 1; k++)
 				{
-					// if outside the space
-					if ((int)current->x() + i < 0 || current->x() + i > space->sizeX() ||
-							(int)current->y() + j < 0 || current->y() + j > space->sizeY() ||
-							(int)current->z() + k < 0 || current->z() + k > space->sizeZ())
-					{
-						continue;
-					}
-
-					// if unvalid node
-					if (!space->operator ()(current->x() + i, current->y() + j, current->z() + k))
+					// if outside the space or in invalid case
+					if (!isValid(space, current->x() + i, current->y() + j, current->z() + k))
 					{
 						continue;
 					}
@@ -161,4 +153,20 @@ Path* AStar::nodeFromPath(Node* node)
 		node = node->parent();
 	}
 	return path;
+}
+
+/*!
+ * \brief AStar::isValid Return if a node is valid or not.
+ * \param space The space to check
+ * \param i
+ * \param j
+ * \param k
+ * \return True is the point is in the space and point to a valid point, false otherwise
+ */
+bool AStar::isValid(Space3d* space, const unsigned int i, const unsigned int j, const unsigned int k)
+{
+	return (i > 0 && i < space->sizeX() &&
+			j > 0 && j < space->sizeY() &&
+			k > 0 && k < space->sizeZ() &&
+			space->operator ()(i, j, k));
 }

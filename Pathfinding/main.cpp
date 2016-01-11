@@ -16,7 +16,11 @@ int main()
 		{
 			for (unsigned int k = 0; k < 50; k++)
 			{
-				if ((i > 10 && i < 40) && (k > 20 && k < 30))
+				if ((i > 9 && i < 12) && (j > 9 && j < 12) && (k > 9 && k < 12))
+				{
+					space->operator ()(i, j, k) = true;
+				}
+				if ((i > 30 && i < 50) && (j > 30 && j < 50) && (k > 30 && k < 50))
 				{
 					space->operator ()(i, j, k) = true;
 				}
@@ -24,10 +28,8 @@ int main()
 		}
 	}
 
-	space->operator ()(0, 2, 0) = false;
-
-	Node* start = new Node(nullptr, 30, 30, 30);
-	Node* goal = new Node(nullptr, 35, 49, 31);
+	Node* start = new Node(nullptr, 10, 10, 10);
+	Node* goal = new Node(nullptr, 40, 40, 40);
 
 	Path* result = AStar::findPath(start, goal, space);
 	if (result != nullptr)

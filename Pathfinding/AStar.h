@@ -19,6 +19,9 @@ protected:
 
 	//! Return the path from the final node.
 	static Path* nodeFromPath(Node* node);
+
+	//! Return if a node is valid or not.
+	static bool isValid(Space3d* space, const unsigned int i, const unsigned int j, const unsigned int k);
 };
 
 #endif // ASTAR_H
