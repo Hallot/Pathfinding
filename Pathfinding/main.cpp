@@ -7,20 +7,20 @@
 int main()
 {
 	// Create the 3d space
-	Space3d* space = new Space3d(200, 200, 200);
+	Space3d* space = new Space3d(500, 500, 500);
 
 	// Set the inner values at true, the rest false
-	for (unsigned int i = 0; i < 200; i++)
+	for (unsigned int i = 0; i < 500; i++)
 	{
-		for (unsigned int j = 0; j < 200; j++)
+		for (unsigned int j = 0; j < 500; j++)
 		{
-			for (unsigned int k = 0; k < 200; k++)
+			for (unsigned int k = 0; k < 500; k++)
 			{
-				if ((i > 0 && i < 200) && (j > 0 && j < 200) && (k > 0 && k < 15))
+				if ((i > 0 && i < 500) && (j > 0 && j < 500) && (k > 0 && k < 15))
 				{
 					space->operator ()(i, j, k) = true;
 				}
-				if ((i > 0 && i < 200) && (j > 0 && j < 200) && (k > 85 && k < 200))
+				if ((i > 0 && i < 500) && (j > 0 && j < 500) && (k > 85 && k < 500))
 				{
 					space->operator ()(i, j, k) = true;
 				}
@@ -28,7 +28,7 @@ int main()
 		}
 	}
 
-	for (unsigned int k = 0; k < 200; k++)
+	for (unsigned int k = 0; k < 500; k++)
 	{
 		space->operator ()(29, 29, k) = true;
 		space->operator ()(30, 30, k) = true;
@@ -36,7 +36,7 @@ int main()
 	}
 
 	Node* start = new Node(nullptr, 10, 10, 10);
-	Node* goal = new Node(nullptr, 190, 190, 190);
+	Node* goal = new Node(start, 400, 400, 400);
 
 	Path* result = AStar::findPath(start, goal, space);
 	if (result != nullptr)
@@ -49,9 +49,10 @@ int main()
 	}
 
 	// cleaning up
+
 	delete result;
-	delete start;
 	delete goal;
+	delete start;
 	delete space;
 
 	return 0;

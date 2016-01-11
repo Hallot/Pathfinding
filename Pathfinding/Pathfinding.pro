@@ -2,6 +2,8 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 
+QMAKE_CFLAGS_RELEASE += -O2
+
 SOURCES += main.cpp \
     AStar.cpp \
     Space3d.cpp \

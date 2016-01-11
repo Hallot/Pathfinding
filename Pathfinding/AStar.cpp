@@ -29,17 +29,30 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 
 	// the open set where the nodes to be explored are stored
 	// a min heap where the node with the lowest cost is stored first
-	QMultiMap<double, Node*> openSet;
+	QHash<unsigned long, Node*> openSet;
 	// the closed set where the already explored nodes are stored
 	QHash<unsigned long, Node*> closedSet;
 
 	// put the start position in the open set
-	openSet.insert(openSet.begin(), 0., startPosition);
+	openSet.insert(cantorTuple(startPosition->x(), startPosition->y(), startPosition->z()), startPosition);
 
 	while (!openSet.empty())
 	{
-		Node* current = openSet.begin().value();
-		openSet.erase(openSet.begin());
+		// select the node with the lowest cost
+		Node* current = nullptr;
+		foreach (Node* node, openSet)
+		{
+			if (current == nullptr)
+			{
+				current = node;
+			}
+			else if (node->cost() < current->cost())
+			{
+				current = node;
+			}
+		}
+		// remove it from the openset
+		openSet.remove(cantorTuple(current->x(), current->y(), current->z()));
 		// create the neighbouring nodes
 		for (int i = -1; i <= 1; i++)
 		{
@@ -61,9 +74,6 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 
 					// set the parent node to current for the new nodes
 					Node* newNode = new Node(current, current->x() + i, current->y() + j, current->z() + k);
-
-					// flag if we need to break out of this neighbour to the next one
-					bool next = false;
 
 					// if we have found the goal, we are done
 					if (newNode->operator ==(goalPosition))
@@ -88,42 +98,24 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 
 					// if node with same coordinates in openSet but lower cost, skip
 					// else replace it
-					for (auto it = openSet.begin(); it != openSet.end(); it++)
+					auto itOpen = openSet.find(cantorTuple(newNode->x(), newNode->y(), newNode->z()));
+					if (itOpen != openSet.end())
 					{
-						// if same coordinates
-						if (it.value()->operator ==(newNode))
+						// existing with lower cost than in openset
+						if (itOpen.value()->cost() > newNode->cost())
 						{
-							// existing one with lower cost in openset
-							if (it.key() < newNode->cost())
-							{
-								// delete the node
-								delete newNode;
-							}
-							// existing with lower cost than in openset
-							else
-							{
-								// delete the node
-								delete it.value();
-								// remove the node
-								openSet.erase(it);
-								// add the new node instead
-								openSet.insert(newNode->cost(), newNode);
-
-							}
-							// break out of the search loop
-							next = true;
-							break;
+							// replace the old node by the new one
+							itOpen.value()->setValue(newNode);
 						}
-					}
-					// and continue to the next value of the neighbours' loop
-					if (next)
-					{
+						// delete the now useless new one
+						delete newNode;
+						// continue to the next value of the neighbours' loop
 						continue;
 					}
 
 					// if node with same coordinates in closedSet skip
-					auto it = closedSet.find(cantorTuple(newNode->x(), newNode->y(), newNode->z()));
-					if (it != closedSet.end())
+					auto itClosed = closedSet.find(cantorTuple(newNode->x(), newNode->y(), newNode->z()));
+					if (itClosed != closedSet.end())
 					{
 						// delete the node
 						delete newNode;
@@ -132,7 +124,7 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 					}
 
 					// add the node to the open list
-					openSet.insert(newNode->cost(), newNode);
+					openSet.insert(cantorTuple(newNode->x(), newNode->y(), newNode->z()), newNode);
 				}
 			}
 		}
@@ -173,10 +165,7 @@ Path* AStar::pathFromNode(Node* node)
 	Path* path = new Path();
 	while (node != nullptr)
 	{
-		Path::Point point;
-		point.x = node->x();
-		point.y = node->y();
-		point.z = node->z();
+		Path::Point* point = new Path::Point(node->x(), node->y(), node->z());
 		path->prepend(point);
 		node = node->parent();
 	}

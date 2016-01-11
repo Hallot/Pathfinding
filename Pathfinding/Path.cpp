@@ -5,15 +5,24 @@
  * \brief Path::Path Constructor.
  */
 Path::Path():
-	_path(QList<Point>())
+	_path(new QList<Point*>())
 {
+}
+
+/*!
+ * \brief Path::~Path Destructor.
+ */
+Path::~Path()
+{
+	qDeleteAll(*_path);
+	delete _path;
 }
 
 /*!
  * \brief Path::path Return the path
  * \return
  */
-QList<Path::Point> Path::path()
+QList<Path::Point*>* Path::path()
 {
 	return _path;
 }
@@ -25,9 +34,9 @@ QList<Path::Point> Path::path()
 std::string Path::toString()
 {
 	std::stringstream res;
-	foreach (Point p, _path)
+	foreach (Point* p, *_path)
 	{
-		res << "[x: " << p.x << ", y: " << p.y << ", z: " << p.z << "]\n";
+		res << "[x: " << p->x << ", y: " << p->y << ", z: " << p->z << "]\n";
 	}
 	return res.str();
 }
@@ -36,16 +45,25 @@ std::string Path::toString()
  * \brief Path::append Append a point to the path.
  * \param point The point to append.
  */
-void Path::append(Path::Point point)
+void Path::append(Point* point)
 {
-	_path.append(point);
+	_path->append(point);
 }
 
 /*!
  * \brief Path::prepend Prepend a point to the path.
  * \param point The point to prepend
  */
-void Path::prepend(Path::Point point)
+void Path::prepend(Point* point)
 {
-	_path.prepend(point);
+	_path->prepend(point);
+}
+
+
+Path::Point::Point(const unsigned int &x, const unsigned int &y, const unsigned int &z):
+	x(x),
+	y(y),
+	z(z)
+{
+
 }
