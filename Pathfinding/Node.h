@@ -5,7 +5,8 @@ class Node
 {
 public:
 	//! Constructor
-	Node(Node* Parent, unsigned int x, unsigned int y, unsigned int z);
+	Node(Node* parent, unsigned int x, unsigned int y, unsigned int z);
+	Node(Node* parent, unsigned int x, unsigned int y, unsigned int z, double cost, double previousCost, double heuristic);
 
 	//! Two nodes are equals if the have the same position
 	bool operator==(const Node* rightHandSide) const;
@@ -13,6 +14,12 @@ public:
 
 	//! Square of the euclidian distance between two nodes
 	static double squaredEuclidianDistance(Node* node1, Node* node2);
+
+	//! Euclidian distance between two nodes.
+	static double euclidianDistance(Node* node1, Node* node2);
+
+	//! Manhattan distance between two nodes.
+	static double manhattanDistance(Node* node1, Node* node2);
 
 	//! Set the value of a node to this node.
 	void setValue(Node* node);

@@ -16,6 +16,17 @@ Node::Node(Node* parent, unsigned int x, unsigned int y, unsigned int z):
 {
 }
 
+Node::Node(Node* parent, unsigned int x, unsigned int y, unsigned int z, double cost, double previousCost, double heuristic):
+	_parent(parent),
+	_x(x),
+	_y(y),
+	_z(z),
+	_cost(cost),
+	_previousCost(previousCost),
+	_heuristic(heuristic)
+{
+}
+
 /*!
  * \brief Node::operator == Two nodes are equals if the have the same position
  * \param rightHandSide The right hand side value to be compared.
@@ -40,13 +51,37 @@ bool Node::operator!=(const Node* rightHandSide) const
  * \brief Node::squaredEuclidianDistance Square of the euclidian distance between two nodes
  * \param node1 The first node
  * \param node2 The second node
- * \return Return the euclidian distance betweent the two nodes squared
+ * \return Return the euclidian distance between the two nodes squared
  */
 double Node::squaredEuclidianDistance(Node* node1, Node* node2)
 {
 	return (node1->x() - node2->x()) * (node1->x() - node2->x()) +
 				  (node1->y() - node2->y()) * (node1->y() - node2->y()) +
 			(node1->z() - node2->z()) * (node1->z() - node2->z());
+}
+
+/*!
+ * \brief Node::euclidianDistance Euclidian distance between two nodes.
+ * \param node1 The first node
+ * \param node2 The second node
+ * \return Return the euclidian distance between the two nodes
+ */
+double Node::euclidianDistance(Node* node1, Node* node2)
+{
+	return qSqrt((node1->x() - node2->x()) * (node1->x() - node2->x()) +
+				  (node1->y() - node2->y()) * (node1->y() - node2->y()) +
+			(node1->z() - node2->z()) * (node1->z() - node2->z()));
+}
+
+/*!
+ * \brief Node::manhattanDistance Manhattan distance between two nodes.
+ * \param node1 The first node
+ * \param node2 The second node
+ * \return Return the manhattan distance between the two nodes
+ */
+double Node::manhattanDistance(Node* node1, Node* node2)
+{
+	return qAbs(node1->x() - node2->x()) + qAbs(node1->y() - node2->y()) + qAbs(node1->z() - node2->z());
 }
 
 /*!

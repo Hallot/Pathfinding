@@ -1,5 +1,6 @@
 #include "Space3d.h"
 #include "AStar.h"
+#include "AStarQuick.h"
 #include "Node.h"
 #include "Path.h"
 #include <iostream>
@@ -36,19 +37,36 @@ int main()
 		space->operator ()(31, 31, k) = true;
 	}
 
-	Node* start = new Node(nullptr, 10, 10, 10);
-	Node* goal = new Node(start, 400, 400, 400);
+	Node* start = new Node(nullptr, 10, 10, 10, 0., 0., 0.);
+	Node* goal = new Node(start, 400, 400, 400, 0., 0., 0.);
 
 
 	std::clock_t begin;
 	begin = std::clock();
 	Path* result = AStar::findPath(start, goal, space);
-	std::cout << "Time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
+	std::cout << "AStar time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
+
+	Node* start2 = new Node(nullptr, 10, 10, 10, 0., 0., 0.);
+	Node* goal2 = new Node(start2, 400, 400, 400, 0., 0., 0.);
+
+	begin = std::clock();
+	Path* result2 = AStarQuick::findPath(start2, goal2, space);
+	std::cout << "AStarQuick time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
 	// print result
 	if (result != nullptr)
 	{
-		//std::cout << result->toString();
+//		std::cout << result->toString();
+	}
+	else
+	{
+		std::cout << "Invalid path.\n";
+	}
+
+	// print result2
+	if (result2 != nullptr)
+	{
+//		std::cout << result2->toString();
 	}
 	else
 	{
@@ -56,8 +74,8 @@ int main()
 	}
 
 	// cleaning up
-
 	delete result;
+	delete result2;
 	delete goal;
 	delete start;
 	delete space;
