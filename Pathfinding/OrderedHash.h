@@ -24,9 +24,16 @@ public:
 	//! Find in the hash.
 	QHash<unsigned long, Node*>::const_iterator find(const long &key) const;
 	//! Return the element with the lowest cost and delete it.
-	Node* popLowest() const;
+	Node* popLowest();
+	// Remove the element with the highest cost.
+	void removeHighest();
 	//! Return an iterator to the end of the hash.
 	QHash<unsigned long, Node*>::const_iterator end() const;
+
+	//! Return the number of elements.
+	unsigned int size();
+	//! Return the cost of the last element, ie the one with the highest cost.
+	unsigned int highestCost();
 
 	//! If empty.
 	bool empty() const;

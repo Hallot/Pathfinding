@@ -1,6 +1,7 @@
 #include "AStar.h"
 #include "Node.h"
 #include "Space3d.h"
+#include "Utils.h"
 #include <qhash.h>
 #include <iostream>
 
@@ -14,8 +15,8 @@
 Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 {
 	// check that the start and goal are valid
-	if (!isValid(space, startPosition->x(), startPosition->y(), startPosition->z()) ||
-			!isValid(space, goalPosition->x(), goalPosition->y(), goalPosition->z()))
+	if (!Utils::isValid(space, startPosition->x(), startPosition->y(), startPosition->z()) ||
+			!Utils::isValid(space, goalPosition->x(), goalPosition->y(), goalPosition->z()))
 	{
 		return nullptr;
 	}
@@ -23,7 +24,7 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 	// and check that start is not goal
 	if (startPosition->operator ==(goalPosition))
 	{
-		return pathFromNode(goalPosition);
+		return Utils::pathFromNode(goalPosition);
 	}
 
 	// the open set where the nodes to be explored are stored
@@ -33,7 +34,7 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 	QHash<unsigned long, Node*>* closedSet = new QHash<unsigned long, Node*>();
 
 	// put the start position in the open set
-	openSet->insert(cantorTuple(startPosition->x(), startPosition->y(), startPosition->z()), startPosition);
+	openSet->insert(Utils::cantorTuple(startPosition->x(), startPosition->y(), startPosition->z()), startPosition);
 
 	while (!openSet->empty())
 	{
@@ -51,7 +52,7 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 			}
 		}
 		// remove it from the openset
-		openSet->remove(cantorTuple(current->x(), current->y(), current->z()));
+		openSet->remove(Utils::cantorTuple(current->x(), current->y(), current->z()));
 
 		// create the neighbouring nodes
 		for (int i = -1; i <= 1; i++)
@@ -67,7 +68,7 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 					}
 
 					// if outside the space or in invalid case
-					if (!isValid(space, current->x() + i, current->y() + j, current->z() + k))
+					if (!Utils::isValid(space, current->x() + i, current->y() + j, current->z() + k))
 					{
 						continue;
 					}
@@ -79,7 +80,7 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 					if (newNode->operator ==(goalPosition))
 					{
 						// recreate the path from the final node
-						Path* path = pathFromNode(newNode);
+						Path* path = Utils::pathFromNode(newNode);
 
 						// delete all the nodes
 						delete newNode;
@@ -100,7 +101,7 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 
 					// if node with same coordinates in openSet but lower cost, skip
 					// else replace it
-					auto itOpen = openSet->find(cantorTuple(newNode->x(), newNode->y(), newNode->z()));
+					auto itOpen = openSet->find(Utils::cantorTuple(newNode->x(), newNode->y(), newNode->z()));
 					if (itOpen != openSet->end())
 					{
 						// existing with lower cost than in openset
@@ -116,7 +117,7 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 					}
 
 					// if node with same coordinates in closedSet skip
-					auto itClosed = closedSet->find(cantorTuple(newNode->x(), newNode->y(), newNode->z()));
+					auto itClosed = closedSet->find(Utils::cantorTuple(newNode->x(), newNode->y(), newNode->z()));
 					if (itClosed != closedSet->end())
 					{
 						// delete the node
@@ -126,12 +127,12 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 					}
 
 					// add the node to the open list
-					openSet->insert(cantorTuple(newNode->x(), newNode->y(), newNode->z()), newNode);
+					openSet->insert(Utils::cantorTuple(newNode->x(), newNode->y(), newNode->z()), newNode);
 				}
 			}
 		}
 		// add current to the closed list
-		closedSet->insert(cantorTuple(current->x(), current->y(), current->z()), current);
+		closedSet->insert(Utils::cantorTuple(current->x(), current->y(), current->z()), current);
 	}
 
 	// no solution found
@@ -144,50 +145,4 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 	delete closedSet;
 
 	return nullptr;
-}
-
-/*!
- * \brief AStar::cantorTuple Return the cantor tuple associated with the 3 integers
- * https://en.wikipedia.org/wiki/Pairing_function#Cantor_pairing_function
- * \param a
- * \param b
- * \param c
- * \return A unique natural number based on the three inputs.
- */
-unsigned long AStar::cantorTuple(const unsigned int a, const unsigned int b, const unsigned int c)
-{
-	return (unsigned long)((double)1/2 * ((double)1/2 * (a + b) * (a + b + 1) + b + c) * ((double)1/2 * (a + b) * (a + b + 1) + b + c + 1) + c);
-}
-
-/*!
- * \brief AStar::nodeFromPath Return the path from the final node.
- * \param node The end node of the path.
- * \return
- */
-Path* AStar::pathFromNode(Node* node)
-{
-	Path* path = new Path();
-	while (node != nullptr)
-	{
-		Path::Point* point = new Path::Point(node->x(), node->y(), node->z());
-		path->prepend(point);
-		node = node->parent();
-	}
-	return path;
-}
-
-/*!
- * \brief AStar::isValid Return if a node is valid or not.
- * \param space The space to check
- * \param i
- * \param j
- * \param k
- * \return True is the point is in the space and point to a valid point, false otherwise
- */
-bool AStar::isValid(Space3d* space, const unsigned int i, const unsigned int j, const unsigned int k)
-{
-	return (i > 0 && i < space->sizeX() &&
-			j > 0 && j < space->sizeY() &&
-			k > 0 && k < space->sizeZ() &&
-			space->operator ()(i, j, k));
 }

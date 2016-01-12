@@ -1,4 +1,4 @@
-#include "AStarQuick.h"
+#include "SMAStar.h"
 #include "Node.h"
 #include "Space3d.h"
 #include "Utils.h"
@@ -7,13 +7,13 @@
 #include <iostream>
 
 /*!
- * \brief AStarQuick::findPath Return the path from start to goal using the a* algorithm.
+ * \brief SMAStar::findPath Return the path from start to goal using the a* algorithm.
  * \param startPosition The node of the start position.
  * \param goalPosition The node of the goal.
  * \param space The space for the search.
  * \return The last node that contains the result's path.
  */
-Path* AStarQuick::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
+Path* SMAStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space, unsigned int openSetMaxSize)
 {
 	// check that the start and goal are valid
 	if (!Utils::isValid(space, startPosition->x(), startPosition->y(), startPosition->z()) ||
@@ -113,7 +113,20 @@ Path* AStarQuick::findPath(Node* startPosition, Node* goalPosition, Space3d* spa
 					}
 
 					// add the node to the open list
-					openSet->insert(Utils::cantorTuple(newNode->x(), newNode->y(), newNode->z()), newNode);
+					// discard if max size is reached and the node cost is bigger than anything in the set
+					if (openSet->size() <= openSetMaxSize)
+					{
+						openSet->insert(Utils::cantorTuple(newNode->x(), newNode->y(), newNode->z()), newNode);
+					}
+					else if (newNode->cost() < openSet->highestCost() && openSet->size() > 0)
+					{
+						openSet->removeHighest();
+						openSet->insert(Utils::cantorTuple(newNode->x(), newNode->y(), newNode->z()), newNode);
+					}
+					else
+					{
+						delete newNode;
+					}
 				}
 			}
 		}

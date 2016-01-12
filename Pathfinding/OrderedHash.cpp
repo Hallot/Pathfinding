@@ -59,7 +59,7 @@ QHash<unsigned long, Node*>::const_iterator OrderedHash::find(const long& key) c
  * \brief OrderedHash::popLowest Return the element with the lowest cost and delete it.
  * \return The value
  */
-Node* OrderedHash::popLowest() const
+Node* OrderedHash::popLowest()
 {
 	// find the element with lowest cost
 	auto it = _orderedMap->begin();
@@ -73,12 +73,45 @@ Node* OrderedHash::popLowest() const
 }
 
 /*!
+ * \brief OrderedHash::removeHighest Remove the element with the highest cost.
+ */
+void OrderedHash::removeHighest()
+{
+	// find the element with lowest cost
+	auto it = _orderedMap->end();
+	// end is beyond the latest element
+	--it;
+	// delete it in both containers
+	delete _hash->find(it.value()).value();
+	_hash->remove(it.value());
+	_orderedMap->erase(it);
+}
+
+/*!
  * \brief OrderedHash::end Return an iterator to the end of the hash.
  * \return
  */
 QHash<unsigned long, Node*>::const_iterator OrderedHash::end() const
 {
 	return _hash->end();
+}
+
+/*!
+ * \brief OrderedHash::size Return the number of elements.
+ * \return
+ */
+unsigned int OrderedHash::size()
+{
+	return _hash->size();
+}
+
+/*!
+ * \brief OrderedHash::highestCost Return the cost of the last element, ie the one with the highest cost.
+ * \return
+ */
+unsigned int OrderedHash::highestCost()
+{
+	return _orderedMap->lastKey();
 }
 
 /*!
