@@ -13,13 +13,13 @@ public:
 	bool operator!=(const Node* rightHandSide) const;
 
 	//! Square of the euclidian distance between two nodes
-	static double squaredEuclidianDistance(Node* node1, Node* node2);
+	static unsigned int squaredEuclidianDistance(Node* node1, Node* node2);
 
 	//! Euclidian distance between two nodes.
-	static double euclidianDistance(Node* node1, Node* node2);
+	static unsigned int euclidianDistance(Node* node1, Node* node2);
 
 	//! Manhattan distance between two nodes.
-	static double manhattanDistance(Node* node1, Node* node2);
+	static unsigned int manhattanDistance(Node* node1, Node* node2);
 
 	//! Set the value of a node to this node.
 	void setValue(Node* node);
@@ -37,14 +37,14 @@ public:
 	unsigned int z() const;
 	void setZ(unsigned int z);
 
-	double cost() const;
-	void setCost(double cost);
+	unsigned int cost() const;
+	void setCost(unsigned int cost);
 
-	double previousCost() const;
-	void setPreviousCost(double previousCost);
+	unsigned int previousCost() const;
+	void setPreviousCost(unsigned int previousCost);
 
-	double heuristic() const;
-	void setHeuristic(double heuristic);
+	unsigned int heuristic() const;
+	void setHeuristic(unsigned int heuristic);
 
 protected:
 	//! Parent node
@@ -54,11 +54,11 @@ protected:
 	unsigned int _y;
 	unsigned int _z;
 	//! Cost of the node
-	double _cost;
+	unsigned int _cost;
 	//! Cost to get to the node
-	double _previousCost;
+	unsigned int _previousCost;
 	//! Heuristic cost to get to the goal
-	double _heuristic;
+	unsigned int _heuristic;
 
 };
 

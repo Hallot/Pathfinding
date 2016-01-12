@@ -53,11 +53,11 @@ bool Node::operator!=(const Node* rightHandSide) const
  * \param node2 The second node
  * \return Return the euclidian distance between the two nodes squared
  */
-double Node::squaredEuclidianDistance(Node* node1, Node* node2)
+unsigned int Node::squaredEuclidianDistance(Node* node1, Node* node2)
 {
-	return (node1->x() - node2->x()) * (node1->x() - node2->x()) +
-				  (node1->y() - node2->y()) * (node1->y() - node2->y()) +
-			(node1->z() - node2->z()) * (node1->z() - node2->z());
+	return ((int)node1->x() - (int)node2->x()) * ((int)node1->x() - (int)node2->x()) +
+			((int)node1->y() - (int)node2->y()) * ((int)node1->y() - (int)node2->y()) +
+	  ((int)node1->z() - (int)node2->z()) * ((int)node1->z() - (int)node2->z());
 }
 
 /*!
@@ -66,11 +66,11 @@ double Node::squaredEuclidianDistance(Node* node1, Node* node2)
  * \param node2 The second node
  * \return Return the euclidian distance between the two nodes
  */
-double Node::euclidianDistance(Node* node1, Node* node2)
+unsigned int Node::euclidianDistance(Node* node1, Node* node2)
 {
-	return qSqrt((node1->x() - node2->x()) * (node1->x() - node2->x()) +
-				  (node1->y() - node2->y()) * (node1->y() - node2->y()) +
-			(node1->z() - node2->z()) * (node1->z() - node2->z()));
+	return qSqrt(((int)node1->x() - (int)node2->x()) * ((int)node1->x() - (int)node2->x()) +
+				  ((int)node1->y() - (int)node2->y()) * ((int)node1->y() - (int)node2->y()) +
+			((int)node1->z() - (int)node2->z()) * ((int)node1->z() - (int)node2->z()));
 }
 
 /*!
@@ -79,9 +79,9 @@ double Node::euclidianDistance(Node* node1, Node* node2)
  * \param node2 The second node
  * \return Return the manhattan distance between the two nodes
  */
-double Node::manhattanDistance(Node* node1, Node* node2)
+unsigned int Node::manhattanDistance(Node* node1, Node* node2)
 {
-	return qAbs(node1->x() - node2->x()) + qAbs(node1->y() - node2->y()) + qAbs(node1->z() - node2->z());
+	return qAbs((int)node1->x() - (int)node2->x()) + qAbs((int)node1->y() - (int)node2->y()) + qAbs((int)node1->z() - (int)node2->z());
 }
 
 /*!
@@ -140,32 +140,32 @@ void Node::setZ(unsigned int z)
 	_z = z;
 }
 
-double Node::cost() const
+unsigned int Node::cost() const
 {
 	return _cost;
 }
 
-void Node::setCost(double cost)
+void Node::setCost(unsigned int cost)
 {
 	_cost = cost;
 }
 
-double Node::previousCost() const
+unsigned int Node::previousCost() const
 {
 	return _previousCost;
 }
 
-void Node::setPreviousCost(double previousCost)
+void Node::setPreviousCost(unsigned int previousCost)
 {
 	_previousCost = previousCost;
 }
 
-double Node::heuristic() const
+unsigned int Node::heuristic() const
 {
 	return _heuristic;
 }
 
-void Node::setHeuristic(double heuristic)
+void Node::setHeuristic(unsigned int heuristic)
 {
 	_heuristic = heuristic;
 }

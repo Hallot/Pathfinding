@@ -56,7 +56,7 @@ int main()
 	// print result
 	if (result != nullptr)
 	{
-//		std::cout << result->toString();
+		std::cout << result->toString();
 	}
 	else
 	{
@@ -66,7 +66,7 @@ int main()
 	// print result2
 	if (result2 != nullptr)
 	{
-//		std::cout << result2->toString();
+		std::cout << result2->toString();
 	}
 	else
 	{
@@ -77,7 +77,7 @@ int main()
 	delete result;
 	delete result2;
 	delete goal;
-	delete start;
+	delete goal2;
 	delete space;
 
 	return 0;
