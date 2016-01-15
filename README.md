@@ -15,10 +15,4 @@ On a 500x500x500 grid with some obstacles.
 * Time: 3.3ms    
 * Memory usage: 1100.9kB
 
-3.SMA\*(4): Modification of A\*Quick that has a maximum openset size of 4, if a newnode has a higher cost than the highest-cost element of the openset and openset is full, it is rejected. Not optimal, but works well on "best case" pathfinding.
-* Time: 2.3ms    
-* Memory usage: 134.3kB
-
-3.SMA\*(10): Modification of A\*Quick that has a maximum openset size of 10, if a newnode has a higher cost than the highest-cost element of the openset and openset is full, it is rejected. Not optimal, but works well on "best case" pathfinding.
-* Time: 2.4ms    
-* Memory usage: 143.3kB
+3.SMA\*: Simplified Memory-Bounded A\*. A low-memory variant of A\*, implementation for now incomplete.
