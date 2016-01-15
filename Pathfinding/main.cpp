@@ -47,7 +47,7 @@ int main()
 	Node* goal = new Node(start, 10, 10, 400, 0., 0., 0.);
 
 	begin = std::clock();
-//	Path* result = AStar::findPath(start, goal, space);
+	Path* result = AStar::findPath(start, goal, space);
 	std::cout << "AStar time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
 	// A*Quick
@@ -55,89 +55,67 @@ int main()
 	Node* goal2 = new Node(start2, 10, 10, 400, 0., 0., 0.);
 
 	begin = std::clock();
-//	Path* result2 = AStarQuick::findPath(start2, goal2, space);
+	Path* result2 = AStarQuick::findPath(start2, goal2, space);
 	std::cout << "AStarQuick time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
-	// SMA* 4
+	// SMA*
 	Node* start3 = new Node(nullptr, 10, 10, 10, 0., 0., 0.);
 	Node* goal3 = new Node(start3, 10, 10, 400, 0., 0., 0.);
 
 	begin = std::clock();
-	Path* result3 = SMAStar::findPath(start3, goal3, space, 4);
-	std::cout << "SMAStar(4) time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
+//	Path* result3 = SMAStar::findPath(start3, goal3, space, 1000);
+	std::cout << "SMAStar(1000) time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
-	// SMA* 10
-	Node* start4 = new Node(nullptr, 10, 10, 10, 0., 0., 0.);
-	Node* goal4 = new Node(start4, 10, 10, 400, 0., 0., 0.);
-
-	begin = std::clock();
-	Path* result4 = SMAStar::findPath(start4, goal4, space, 10);
-	std::cout << "SMAStar(10) time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
 	// check the results to see of they are the same.
-//	if (!Utils::samePaths(result, result2))
-//	{
-//		std::cout << "Path 1 and 2 different.\n";
-//	}
+	if (!Utils::samePaths(result, result2))
+	{
+		std::cout << "Path 1 and 2 different.\n";
+	}
 //	if (!Utils::samePaths(result2, result3))
 //	{
 //		std::cout << "Path 2 and 3 different.\n";
 //	}
-	if (!Utils::samePaths(result3, result4))
-	{
-		std::cout << "Path 3 and 4 different.\n";
-	}
 
 
 	// print result
-//	if (result != nullptr)
-//	{
-//		std::cout << result->toString();
-//	}
-//	else
-//	{
-//		std::cout << "Invalid path.\n";
-//	}
-
-//	// print result2
-//	if (result2 != nullptr)
-//	{
-//		std::cout << result2->toString();
-//	}
-//	else
-//	{
-//		std::cout << "Invalid path.\n";
-//	}
-
-	// print result3
-	if (result3 != nullptr)
+	if (result != nullptr)
 	{
-		std::cout << result3->toString();
+		std::cout << result->toString();
 	}
 	else
 	{
 		std::cout << "Invalid path.\n";
 	}
 
-	// print result4
-	if (result4 != nullptr)
+	// print result2
+	if (result2 != nullptr)
 	{
-//		std::cout << result4->toString();
+		std::cout << result2->toString();
 	}
 	else
 	{
 		std::cout << "Invalid path.\n";
 	}
+
+//	// print result3
+//	if (result3 != nullptr)
+//	{
+//		std::cout << result3->toString();
+//	}
+//	else
+//	{
+//		std::cout << "Invalid path.\n";
+//	}
+
 
 	// cleaning up
-//	delete result;
-//	delete result2;
-	delete result3;
-	delete result4;
+	delete result;
+	delete result2;
+//	delete result3;
 	delete goal;
 	delete goal2;
 	delete goal3;
-	delete goal4;
 	delete space;
 
 	return 0;
