@@ -12,7 +12,10 @@ Node::Node(Node* parent, unsigned int x, unsigned int y, unsigned int z):
 	_parent(parent),
 	_x(x),
 	_y(y),
-	_z(z)
+	_z(z),
+	_cost(0),
+	_previousCost(0),
+	_heuristic(0)
 {
 }
 
@@ -48,43 +51,6 @@ bool Node::operator!=(const Node* rightHandSide) const
 }
 
 /*!
- * \brief Node::squaredEuclidianDistance Square of the euclidian distance between two nodes
- * \param node1 The first node
- * \param node2 The second node
- * \return Return the euclidian distance between the two nodes squared
- */
-unsigned int Node::squaredEuclidianDistance(Node* node1, Node* node2)
-{
-	return ((int)node1->x() - (int)node2->x()) * ((int)node1->x() - (int)node2->x()) +
-			((int)node1->y() - (int)node2->y()) * ((int)node1->y() - (int)node2->y()) +
-	  ((int)node1->z() - (int)node2->z()) * ((int)node1->z() - (int)node2->z());
-}
-
-/*!
- * \brief Node::euclidianDistance Euclidian distance between two nodes.
- * \param node1 The first node
- * \param node2 The second node
- * \return Return the euclidian distance between the two nodes
- */
-unsigned int Node::euclidianDistance(Node* node1, Node* node2)
-{
-	return qSqrt(((int)node1->x() - (int)node2->x()) * ((int)node1->x() - (int)node2->x()) +
-				  ((int)node1->y() - (int)node2->y()) * ((int)node1->y() - (int)node2->y()) +
-			((int)node1->z() - (int)node2->z()) * ((int)node1->z() - (int)node2->z()));
-}
-
-/*!
- * \brief Node::manhattanDistance Manhattan distance between two nodes.
- * \param node1 The first node
- * \param node2 The second node
- * \return Return the manhattan distance between the two nodes
- */
-unsigned int Node::manhattanDistance(Node* node1, Node* node2)
-{
-	return qAbs((int)node1->x() - (int)node2->x()) + qAbs((int)node1->y() - (int)node2->y()) + qAbs((int)node1->z() - (int)node2->z());
-}
-
-/*!
  * \brief Node::setValue Set the value of a node to this node.
  * \param node The node from which to set the values.
  */
@@ -97,6 +63,22 @@ void Node::setValue(Node* node)
 	this->setHeuristic(node->heuristic());
 	this->setParent(node->parent());
 	this->setPreviousCost(node->previousCost());
+}
+
+/*!
+ * \brief Node::depth Return the depth of the node.
+ * \return The number of parents this node has.
+ */
+unsigned int Node::depth()
+{
+	unsigned int depth = 0;
+	Node * node = this;
+	while (node != nullptr)
+	{
+		depth++;
+		node = node->parent();
+	}
+	return depth;
 }
 
 

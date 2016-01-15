@@ -95,8 +95,8 @@ Path* AStar::findPath(Node* startPosition, Node* goalPosition, Space3d* space)
 					}
 
 					// update the costs
-					newNode->setPreviousCost(current->previousCost() + Node::squaredEuclidianDistance(current, newNode));
-					newNode->setHeuristic(Node::squaredEuclidianDistance(newNode, goalPosition));
+					newNode->setPreviousCost(current->previousCost() + Utils::squaredEuclidianDistance(current, newNode));
+					newNode->setHeuristic(Utils::squaredEuclidianDistance(newNode, goalPosition));
 					newNode->setCost(newNode->previousCost() + newNode->heuristic());
 
 					// if node with same coordinates in openSet but lower cost, skip

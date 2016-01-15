@@ -12,17 +12,11 @@ public:
 	bool operator==(const Node* rightHandSide) const;
 	bool operator!=(const Node* rightHandSide) const;
 
-	//! Square of the euclidian distance between two nodes
-	static unsigned int squaredEuclidianDistance(Node* node1, Node* node2);
-
-	//! Euclidian distance between two nodes.
-	static unsigned int euclidianDistance(Node* node1, Node* node2);
-
-	//! Manhattan distance between two nodes.
-	static unsigned int manhattanDistance(Node* node1, Node* node2);
-
 	//! Set the value of a node to this node.
 	void setValue(Node* node);
+
+	//! Return the depth of the node.
+	unsigned int depth();
 
 	//! Getters and setters
 	Node* parent() const;
@@ -59,7 +53,6 @@ protected:
 	unsigned int _previousCost;
 	//! Heuristic cost to get to the goal
 	unsigned int _heuristic;
-
 };
 
 #endif // NODE_H

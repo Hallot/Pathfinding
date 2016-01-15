@@ -1,5 +1,6 @@
 #include "OrderedHash.h"
 #include "Node.h"
+#include "Utils.h"
 #include <iostream>
 
 /*!
@@ -56,6 +57,18 @@ QHash<unsigned long, Node*>::const_iterator OrderedHash::find(const long& key) c
 }
 
 /*!
+ * \brief OrderedHash::lowest Return the element with the lowest cost.
+ * \return The value.
+ */
+Node*OrderedHash::lowest()
+{
+	// find the element with lowest cost
+	auto it = _orderedMap->begin();
+	// find the associated node in the hash
+	return _hash->find(it.value()).value();
+}
+
+/*!
  * \brief OrderedHash::popLowest Return the element with the lowest cost and delete it.
  * \return The value
  */
@@ -103,6 +116,16 @@ QHash<unsigned long, Node*>::const_iterator OrderedHash::end() const
 unsigned int OrderedHash::size()
 {
 	return _hash->size();
+}
+
+/*!
+ * \brief OrderedHash::contain If the hash contains a certain node.
+ * \param node The node to look for.
+ * \return True is the node exists in the hash, false otherwise.
+ */
+bool OrderedHash::contains(Node* node)
+{
+	return _hash->contains(Utils::cantorTuple(node));
 }
 
 /*!

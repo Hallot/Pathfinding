@@ -59,11 +59,26 @@ void Path::prepend(Point* point)
 	_path->prepend(point);
 }
 
-
+/*!
+ * \brief Path::Point::Point Point constructor.
+ * \param x
+ * \param y
+ * \param z
+ */
 Path::Point::Point(const unsigned int &x, const unsigned int &y, const unsigned int &z):
 	x(x),
 	y(y),
 	z(z)
 {
 
+}
+
+bool Path::Point::operator==(const Path::Point* rightHandSide) const
+{
+	return (this->x == rightHandSide->x) && (this->y == rightHandSide->y) && (this->z == rightHandSide->z);
+}
+
+bool Path::Point::operator!=(const Path::Point* rightHandSide) const
+{
+	return !(*this == rightHandSide);
 }

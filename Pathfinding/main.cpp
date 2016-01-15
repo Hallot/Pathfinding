@@ -4,6 +4,7 @@
 #include "SMAStar.h"
 #include "Node.h"
 #include "Path.h"
+#include "Utils.h"
 #include <iostream>
 #include <ctime>
 
@@ -23,7 +24,7 @@ int main()
 				{
 					space->operator ()(i, j, k) = true;
 				}
-				if ((i > 0 && i < 500) && (j > 0 && j < 500) && (k > 85 && k < 500))
+				if ((i > 0 && i < 500) && (j > 0 && j < 500) && (k > 250 && k < 500))
 				{
 					space->operator ()(i, j, k) = true;
 				}
@@ -31,11 +32,11 @@ int main()
 		}
 	}
 
-	for (unsigned int k = 0; k < 500; k++)
+	for (unsigned int k = 15; k < 251; k++)
 	{
-		space->operator ()(29, 29, k) = true;
-		space->operator ()(30, 30, k) = true;
-		space->operator ()(31, 31, k) = true;
+		space->operator ()(29 + k, 29 + k, k) = true;
+		space->operator ()(30 + k, 30 + k, k) = true;
+		space->operator ()(31 + k, 31 + k, k) = true;
 	}
 
 	std::clock_t begin;
@@ -43,23 +44,23 @@ int main()
 
 	// A*
 	Node* start = new Node(nullptr, 10, 10, 10, 0., 0., 0.);
-	Node* goal = new Node(start, 400, 400, 400, 0., 0., 0.);
+	Node* goal = new Node(start, 10, 10, 400, 0., 0., 0.);
 
 	begin = std::clock();
-	Path* result = AStar::findPath(start, goal, space);
+//	Path* result = AStar::findPath(start, goal, space);
 	std::cout << "AStar time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
 	// A*Quick
 	Node* start2 = new Node(nullptr, 10, 10, 10, 0., 0., 0.);
-	Node* goal2 = new Node(start2, 400, 400, 400, 0., 0., 0.);
+	Node* goal2 = new Node(start2, 10, 10, 400, 0., 0., 0.);
 
 	begin = std::clock();
-	Path* result2 = AStarQuick::findPath(start2, goal2, space);
+//	Path* result2 = AStarQuick::findPath(start2, goal2, space);
 	std::cout << "AStarQuick time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
 	// SMA* 4
 	Node* start3 = new Node(nullptr, 10, 10, 10, 0., 0., 0.);
-	Node* goal3 = new Node(start3, 400, 400, 400, 0., 0., 0.);
+	Node* goal3 = new Node(start3, 10, 10, 400, 0., 0., 0.);
 
 	begin = std::clock();
 	Path* result3 = SMAStar::findPath(start3, goal3, space, 4);
@@ -67,37 +68,51 @@ int main()
 
 	// SMA* 10
 	Node* start4 = new Node(nullptr, 10, 10, 10, 0., 0., 0.);
-	Node* goal4 = new Node(start4, 400, 400, 400, 0., 0., 0.);
+	Node* goal4 = new Node(start4, 10, 10, 400, 0., 0., 0.);
 
 	begin = std::clock();
 	Path* result4 = SMAStar::findPath(start4, goal4, space, 10);
 	std::cout << "SMAStar(10) time: " << (std::clock() - begin) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
+	// check the results to see of they are the same.
+//	if (!Utils::samePaths(result, result2))
+//	{
+//		std::cout << "Path 1 and 2 different.\n";
+//	}
+//	if (!Utils::samePaths(result2, result3))
+//	{
+//		std::cout << "Path 2 and 3 different.\n";
+//	}
+	if (!Utils::samePaths(result3, result4))
+	{
+		std::cout << "Path 3 and 4 different.\n";
+	}
+
 
 	// print result
-	if (result != nullptr)
-	{
+//	if (result != nullptr)
+//	{
 //		std::cout << result->toString();
-	}
-	else
-	{
-		std::cout << "Invalid path.\n";
-	}
+//	}
+//	else
+//	{
+//		std::cout << "Invalid path.\n";
+//	}
 
-	// print result2
-	if (result2 != nullptr)
-	{
+//	// print result2
+//	if (result2 != nullptr)
+//	{
 //		std::cout << result2->toString();
-	}
-	else
-	{
-		std::cout << "Invalid path.\n";
-	}
+//	}
+//	else
+//	{
+//		std::cout << "Invalid path.\n";
+//	}
 
 	// print result3
 	if (result3 != nullptr)
 	{
-//		std::cout << result3->toString();
+		std::cout << result3->toString();
 	}
 	else
 	{
@@ -115,8 +130,8 @@ int main()
 	}
 
 	// cleaning up
-	delete result;
-	delete result2;
+//	delete result;
+//	delete result2;
 	delete result3;
 	delete result4;
 	delete goal;

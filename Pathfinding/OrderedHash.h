@@ -17,12 +17,13 @@ public:
 
 	//! Insert an element both in the map and hash.
 	void insert(unsigned long key, Node* node);
-
 	// Remove an element in both the map and hash.
 	void remove(unsigned long key);
 
 	//! Find in the hash.
 	QHash<unsigned long, Node*>::const_iterator find(const long &key) const;
+	//! Return the element with the lowest cost.
+	Node* lowest();
 	//! Return the element with the lowest cost and delete it.
 	Node* popLowest();
 	// Remove the element with the highest cost.
@@ -32,6 +33,8 @@ public:
 
 	//! Return the number of elements.
 	unsigned int size();
+	//! If the hash contains a certain node.
+	bool contains(Node* node);
 	//! Return the cost of the last element, ie the one with the highest cost.
 	unsigned int highestCost();
 

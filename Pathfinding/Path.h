@@ -15,6 +15,10 @@ public:
 		const unsigned int z;
 
 		Point(const unsigned int& x, const unsigned int& y, const unsigned int& z);
+
+		//! Two points are equals if the have the same position
+		bool operator==(const Point* rightHandSide) const;
+		bool operator!=(const Point* rightHandSide) const;
 	};
 
 	//! Constructor.
